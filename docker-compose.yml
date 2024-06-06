@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  telegram_bot:
+    build: .
+    container_name: mediabot_uploader
+    environment:
+      - OWNER_ID=${OWNER_ID}
+      - BOT_TOKEN=${BOT_TOKEN}
+    volumes:
+      - ./media:/media
+    restart: unless-stopped

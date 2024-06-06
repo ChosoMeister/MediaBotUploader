@@ -4,6 +4,8 @@ FROM python:3.9-slim
 ENV MEDIA_FOLDER /media
 ENV OWNER_ID your_owner_id
 ENV BOT_TOKEN your_bot_token
+ENV MEGA_EMAIL your_mega_email
+ENV MEGA_PASSWORD your_mega_password
 
 # Create media directory
 RUN mkdir -p ${MEDIA_FOLDER}
@@ -15,7 +17,7 @@ WORKDIR /app
 COPY mediabot_uploader.py .
 
 # Install dependencies
-RUN pip install python-telegram-bot==13.5
+RUN pip install python-telegram-bot==13.5 requests mega.py
 
 # Run the bot
 CMD ["python", "mediabot_uploader.py"]

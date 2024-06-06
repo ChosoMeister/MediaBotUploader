@@ -17,7 +17,7 @@ WORKDIR /app
 COPY mediabot_uploader.py .
 
 # Install dependencies
-RUN pip install python-telegram-bot==13.5 requests mega.py
+RUN pip install python-telegram-bot==13.5 mega.py
 
 # Run the bot
 CMD ["python", "mediabot_uploader.py"]

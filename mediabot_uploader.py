@@ -3,7 +3,7 @@ import logging
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 from mega import Mega
-import requests
+import time
 
 # Set up logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -26,26 +26,32 @@ def handle_media(update: Update, context: CallbackContext) -> None:
     
     try:
         file_info = context.bot.get_file(file_id)
-        file_path = os.path.join(MEDIA_FOLDER, file_info.file_path.split('/')[-1])
-        file_info.download(file_path)
+        file_name = file_info.file_path.split('/')[-1]
+        file_path = os.path.join(MEDIA_FOLDER, file_name)
         
+        update.message.reply_text(f"Downloading file from Telegram...")
+
+        # Download file from Telegram
+        file_info.download(file_path)
+
+        update.message.reply_text(f"File downloaded. Uploading to MEGA...")
+
         # Upload the file to MEGA
         mega = Mega()
         m = mega.login(MEGA_EMAIL, MEGA_PASSWORD)
         uploaded_file = m.upload(file_path)
         file_link = m.get_upload_link(uploaded_file)
 
-        # Download the file from MEGA
-        download_response = requests.get(file_link, stream=True)
-        download_response.raise_for_status()
+        update.message.reply_text(f"File uploaded to MEGA. Download it using this link: {file_link}")
 
-        download_file_path = os.path.join(MEDIA_FOLDER, 'downloaded_' + file_info.file_path.split('/')[-1])
-        with open(download_file_path, 'wb') as f:
-            for chunk in download_response.iter_content(chunk_size=8192):
-                if chunk:
-                    f.write(chunk)
+        # Simulating a wait before downloading from MEGA
+        time.sleep(10)
+
+        # Download the file from MEGA
+        download_file_path = os.path.join(MEDIA_FOLDER, 'downloaded_' + file_name)
+        m.download_url(file_link, dest_filename=download_file_path)
         
-        update.message.reply_text(f"File uploaded to MEGA and downloaded to {download_file_path}")
+        update.message.reply_text(f"File downloaded to {download_file_path}")
     except Exception as e:
         update.message.reply_text(f"Failed to process the file: {e}")
 

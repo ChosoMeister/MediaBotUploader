@@ -23,14 +23,14 @@ jobs:
 
       - name: Build and tag the Docker image
         run: |
-          docker build . -t ghcr.io/chosomeister/MediaBotUploader:${{ env.VERSION }}
+          docker build . -t ghcr.io/chosomeister/mediabotuploader:${{ env.VERSION }}
           docker login -u chosomeister -p ${{ secrets.GGHCR_TOKEN }} ghcr.io
-          docker tag ghcr.io/chosomeister/MediaBotUploader:${{ env.VERSION }} ghcr.io/chosomeister/MediaBotUploader:latest
+          docker tag ghcr.io/chosomeister/mediabotuploader:${{ env.VERSION }} ghcr.io/chosomeister/mediabotuploader:latest
 
       - name: Push the Docker image
         run: |
-          docker push ghcr.io/chosomeister/MediaBotUploader:${{ env.VERSION }}
-          docker push ghcr.io/chosomeister/MediaBotUploader:latest
+          docker push ghcr.io/chosomeister/mediabotuploader:${{ env.VERSION }}
+          docker push ghcr.io/chosomeister/mediabotuploader:latest
 
       - name: Create GitHub Release
         id: create_release

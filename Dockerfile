@@ -1,23 +1,21 @@
+# Use an official Python runtime as a parent image
 FROM python:3.9-slim
-
-# Set environment variables
-ENV MEDIA_FOLDER /media
-ENV OWNER_ID your_owner_id
-ENV BOT_TOKEN your_bot_token
-ENV MEGA_EMAIL your_mega_email
-ENV MEGA_PASSWORD your_mega_password
-
-# Create media directory
-RUN mkdir -p ${MEDIA_FOLDER}
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the bot script
-COPY mediabot_uploader.py .
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-# Install dependencies
-RUN pip install python-telegram-bot==13.5 mega.py
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Run the bot
-CMD ["python", "mediabot_uploader.py"]
+# Make port 8443 available to the world outside this container
+EXPOSE 8443
+
+# Define environment variable
+ENV OWNER_ID=your_owner_id
+ENV BOT_TOKEN=your_bot_token
+
+# Run bot.py when the container launches
+CMD ["python", "bot.py"]
